@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perkalian 4</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.8s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .bounce-in {
+            animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        
+        @keyframes bounceIn {
+            0% { transform: scale(0.3) rotate(-10deg); opacity: 0; }
+            50% { transform: scale(1.05) rotate(2deg); }
+            70% { transform: scale(0.9) rotate(-1deg); }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+        
+        .correct-answer {
+            animation: correctPulse 0.8s ease-in-out;
+            background: linear-gradient(135deg, #10b981, #059669) !important;
+            transform: scale(1.05);
+        }
+        
+        @keyframes correctPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); box-shadow: 0 0 20px rgba(16, 185, 129, 0.6); }
+            100% { transform: scale(1.05); }
+        }
+        
+        .wrong-answer {
+            animation: wrongShake 0.6s ease-in-out;
+            background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+        }
+        
+        @keyframes wrongShake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-8px); }
+            20%, 40%, 60%, 80% { transform: translateX(8px); }
+        }
+        
+        .progress-fill {
+            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .choice-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .disabled-choice {
+            opacity: 0.7;
+            pointer-events: none;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500">
+    
+    <!-- Main Container -->
+    <div class="container mx-auto px-4 py-6">
+        
+        <!-- Header Section -->
+        <header class="text-center mb-6 sm:mb-8 fade-in">
+            <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-3 sm:mb-4 drop-shadow-2xl px-4">
+                🎯 Perkalian 4
+            </h1>
+            <p class="text-base sm:text-lg md:text-xl text-white/90 font-medium px-4">Latih kemampuan perkalian dengan cara yang menyenangkan!</p>
+            
+            <!-- Multiplication Table Image -->
+            <div class="mt-4 sm:mt-6 inline-block px-4">
+                <img src="https://raw.githubusercontent.com/Mathnology3/PERKALIAN-4/refs/heads/main/PERKALIAN%204.png" 
+                     alt="Tabel Perkalian 4" 
+                     class="w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl h-auto rounded-2xl mx-auto"
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                <div style="display: none;" class="text-white text-base sm:text-lg p-6 sm:p-8">
+                    📊 Tabel Perkalian 4<br>
+                    <small>Gambar tidak dapat dimuat</small>
+                </div>
+            </div>
+        </header>
+
+        <!-- Mode Selection Screen -->
+        <section id="modeSelection" class="max-w-2xl mx-auto px-4">
+            <div class="bg-white/95 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-2xl p-4 sm:p-6 md:p-8 fade-in">
+                <h2 class="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 text-center mb-6 sm:mb-8">
+                    🎮 Pilih Mode Permainan
+                </h2>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                    <!-- Sequential Mode -->
+                    <button id="sequentialBtn" class="group bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-xl sm:rounded-2xl p-4 sm:p-6 transition-all duration-300 transform hover:scale-105 hover:shadow-xl">
+                        <div class="text-3xl sm:text-4xl mb-2 sm:mb-3">📚</div>
+                        <h3 class="text-lg sm:text-xl font-bold mb-1 sm:mb-2">Mode Berurutan</h3>
+                        <p class="text-blue-100 text-xs sm:text-sm">Mulai dari 1×4, 2×4, 3×4... hingga 10×4</p>
+                        <div class="mt-3 sm:mt-4 text-xs bg-blue-400/30 rounded-lg px-2 sm:px-3 py-1 inline-block">
+                            Cocok untuk pemula
+                        </div>
+                    </button>
+                    
+                    <!-- Random Mode -->
+                    <button id="randomBtn" class="group bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white rounded-xl sm:rounded-2xl p-4 sm:p-6 transition-all duration-300 transform hover:scale-105 hover:shadow-xl">
+                        <div class="text-3xl sm:text-4xl mb-2 sm:mb-3">🎲</div>
+                        <h3 class="text-lg sm:text-xl font-bold mb-1 sm:mb-2">Mode Acak</h3>
+                        <p class="text-purple-100 text-xs sm:text-sm">Soal perkalian dalam urutan acak</p>
+                        <div class="mt-3 sm:mt-4 text-xs bg-purple-400/30 rounded-lg px-2 sm:px-3 py-1 inline-block">
+                            Tantangan lebih seru
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Game Screen -->
+        <section id="gameScreen" class="hidden max-w-3xl mx-auto px-4">
+            <div class="bg-white/95 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-2xl p-4 sm:p-6 md:p-8">
+                
+                <!-- Game Header -->
+                <div class="flex flex-col sm:flex-row justify-between items-center mb-4 sm:mb-6 gap-3 sm:gap-0">
+                    <div class="flex items-center space-x-2 sm:space-x-4">
+                        <span class="text-sm sm:text-lg font-semibold text-gray-700">Mode:</span>
+                        <span id="currentMode" class="px-2 sm:px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs sm:text-sm font-medium"></span>
+                    </div>
+                    <div class="flex items-center space-x-1 sm:space-x-2">
+                        <span class="text-sm sm:text-lg font-semibold text-gray-700">Skor:</span>
+                        <span id="scoreDisplay" class="text-xl sm:text-2xl font-bold text-green-600">0</span>
+                        <span class="text-gray-500">/</span>
+                        <span class="text-gray-500">10</span>
+                    </div>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="mb-6 sm:mb-8">
+                    <div class="flex justify-between text-xs sm:text-sm text-gray-600 mb-2">
+                        <span>Progress</span>
+                        <span id="progressText">0/10</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2 sm:h-3 overflow-hidden">
+                        <div id="progressBar" class="progress-fill h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <!-- Question Display -->
+                <div class="text-center mb-6 sm:mb-8 md:mb-10">
+                    <div id="questionDisplay" class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold text-gray-800 mb-3 sm:mb-4 bounce-in">
+                        4 × 1 = ?
+                    </div>
+                    <div class="text-sm sm:text-base md:text-lg text-gray-600">
+                        Soal <span id="questionNumber">1</span> dari 10
+                    </div>
+                </div>
+
+                <!-- Answer Choices -->
+                <div class="grid grid-cols-2 gap-3 sm:gap-4 mb-6 sm:mb-8" id="choicesContainer">
+                    <button class="choice-btn choice-hover bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-bold py-4 sm:py-6 md:py-8 px-3 sm:px-4 md:px-6 rounded-xl sm:rounded-2xl text-2xl sm:text-3xl md:text-4xl transition-all duration-300 shadow-lg border-2 sm:border-4 border-red-300/50" data-index="0">
+                        4
+                    </button>
+                    <button class="choice-btn choice-hover bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-bold py-4 sm:py-6 md:py-8 px-3 sm:px-4 md:px-6 rounded-xl sm:rounded-2xl text-2xl sm:text-3xl md:text-4xl transition-all duration-300 shadow-lg border-2 sm:border-4 border-blue-300/50" data-index="1">
+                        8
+                    </button>
+                    <button class="choice-btn choice-hover bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-4 sm:py-6 md:py-8 px-3 sm:px-4 md:px-6 rounded-xl sm:rounded-2xl text-2xl sm:text-3xl md:text-4xl transition-all duration-300 shadow-lg border-2 sm:border-4 border-green-300/50" data-index="2">
+                        12
+                    </button>
+                    <button class="choice-btn choice-hover bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-bold py-4 sm:py-6 md:py-8 px-3 sm:px-4 md:px-6 rounded-xl sm:rounded-2xl text-2xl sm:text-3xl md:text-4xl transition-all duration-300 shadow-lg border-2 sm:border-4 border-purple-300/50" data-index="3">
+                        16
+                    </button>
+                </div>
+
+                <!-- Feedback Message -->
+                <div id="feedbackMessage" class="text-center text-lg sm:text-xl md:text-2xl font-bold mb-4 sm:mb-6 h-6 sm:h-8"></div>
+
+                <!-- Back Button -->
+                <div class="text-center">
+                    <button id="backToMenuBtn" class="bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 sm:py-3 px-4 sm:px-6 rounded-lg sm:rounded-xl text-sm sm:text-base transition-all duration-300 transform hover:scale-105">
+                        🏠 Kembali ke Menu
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Results Screen -->
+        <section id="resultsScreen" class="hidden max-w-2xl mx-auto px-4">
+            <div class="bg-white/95 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-2xl p-4 sm:p-6 md:p-8 text-center bounce-in">
+                <div id="resultEmoji" class="text-6xl sm:text-7xl md:text-8xl mb-4 sm:mb-6">🎉</div>
+                <h2 id="resultTitle" class="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mb-3 sm:mb-4">Selamat!</h2>
+                <p id="resultMessage" class="text-base sm:text-lg md:text-xl text-gray-600 mb-4 sm:mb-6 px-2">Anda telah menyelesaikan semua soal!</p>
+                
+                <!-- Final Score -->
+                <div class="bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl sm:rounded-2xl p-4 sm:p-6 mb-6 sm:mb-8">
+                    <div class="text-sm sm:text-base md:text-lg mb-2">Skor Akhir</div>
+                    <div id="finalScore" class="text-3xl sm:text-4xl md:text-5xl font-bold">10/10</div>
+                    <div id="percentage" class="text-sm sm:text-base md:text-lg mt-2 opacity-90">100%</div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="space-y-3 sm:space-y-4">
+                    <button id="playAgainBtn" class="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-3 sm:py-4 px-6 sm:px-8 rounded-xl sm:rounded-2xl text-base sm:text-lg md:text-xl transition-all duration-300 transform hover:scale-105 shadow-lg">
+                        🔄 Main Lagi
+                    </button>
+                    <button id="backToMenuFromResults" class="w-full bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 sm:py-3 px-4 sm:px-6 rounded-lg sm:rounded-xl text-sm sm:text-base transition-all duration-300">
+                        🏠 Menu Utama
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="text-center mt-8 sm:mt-10 md:mt-12 fade-in px-4">
+            <p class="text-white/80 text-base sm:text-lg font-medium drop-shadow-lg">
+                © 2025 Mathnology
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        class MultiplicationGame {
+            constructor() {
+                this.gameState = {
+                    mode: '',
+                    currentQuestion: 0,
+                    score: 0,
+                    questions: [],
+                    totalQuestions: 10,
+                    isAnswered: false
+                };
+                
+                this.elements = this.initializeElements();
+                this.bindEvents();
+                this.showModeSelection();
+            }
+
+            initializeElements() {
+                return {
+                    modeSelection: document.getElementById('modeSelection'),
+                    gameScreen: document.getElementById('gameScreen'),
+                    resultsScreen: document.getElementById('resultsScreen'),
+                    sequentialBtn: document.getElementById('sequentialBtn'),
+                    randomBtn: document.getElementById('randomBtn'),
+                    currentMode: document.getElementById('currentMode'),
+                    scoreDisplay: document.getElementById('scoreDisplay'),
+                    progressBar: document.getElementById('progressBar'),
+                    progressText: document.getElementById('progressText'),
+                    questionDisplay: document.getElementById('questionDisplay'),
+                    questionNumber: document.getElementById('questionNumber'),
+                    choicesContainer: document.getElementById('choicesContainer'),
+                    feedbackMessage: document.getElementById('feedbackMessage'),
+                    backToMenuBtn: document.getElementById('backToMenuBtn'),
+                    resultEmoji: document.getElementById('resultEmoji'),
+                    resultTitle: document.getElementById('resultTitle'),
+                    resultMessage: document.getElementById('resultMessage'),
+                    finalScore: document.getElementById('finalScore'),
+                    percentage: document.getElementById('percentage'),
+                    playAgainBtn: document.getElementById('playAgainBtn'),
+                    backToMenuFromResults: document.getElementById('backToMenuFromResults')
+                };
+            }
+
+            bindEvents() {
+                this.elements.sequentialBtn.addEventListener('click', () => this.startGame('sequential'));
+                this.elements.randomBtn.addEventListener('click', () => this.startGame('random'));
+                this.elements.backToMenuBtn.addEventListener('click', () => this.showModeSelection());
+                this.elements.playAgainBtn.addEventListener('click', () => this.restartGame());
+                this.elements.backToMenuFromResults.addEventListener('click', () => this.showModeSelection());
+                
+                // Bind choice buttons
+                this.elements.choicesContainer.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('choice-btn') && !this.gameState.isAnswered) {
+                        this.handleAnswer(parseInt(e.target.dataset.index));
+                    }
+                });
+            }
+
+            startGame(mode) {
+                this.gameState.mode = mode;
+                this.gameState.currentQuestion = 0;
+                this.gameState.score = 0;
+                this.gameState.isAnswered = false;
+                
+                // Generate questions
+                if (mode === 'sequential') {
+                    this.gameState.questions = Array.from({length: 10}, (_, i) => i + 1);
+                    this.elements.currentMode.textContent = 'Berurutan';
+                } else {
+                    this.gameState.questions = this.shuffleArray(Array.from({length: 10}, (_, i) => i + 1));
+                    this.elements.currentMode.textContent = 'Acak';
+                }
+                
+                this.showGameScreen();
+                this.displayQuestion();
+            }
+
+            shuffleArray(array) {
+                const shuffled = [...array];
+                for (let i = shuffled.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+                }
+                return shuffled;
+            }
+
+            displayQuestion() {
+                const questionNum = this.gameState.questions[this.gameState.currentQuestion];
+                const correctAnswer = 4 * questionNum;
+                
+                // Update question display
+                this.elements.questionDisplay.textContent = `4 × ${questionNum} = ?`;
+                this.elements.questionNumber.textContent = this.gameState.currentQuestion + 1;
+                this.elements.scoreDisplay.textContent = this.gameState.score;
+                this.elements.progressText.textContent = `${this.gameState.currentQuestion}/10`;
+                this.elements.progressBar.style.width = `${(this.gameState.currentQuestion / 10) * 100}%`;
+                this.elements.feedbackMessage.textContent = '';
+                
+                // Generate answer choices
+                const choices = this.generateChoices(correctAnswer);
+                const choiceButtons = this.elements.choicesContainer.querySelectorAll('.choice-btn');
+                
+                choiceButtons.forEach((btn, index) => {
+                    btn.textContent = choices[index];
+                    btn.dataset.correct = choices[index] === correctAnswer ? 'true' : 'false';
+                    btn.classList.remove('correct-answer', 'wrong-answer', 'disabled-choice');
+                });
+                
+                this.gameState.isAnswered = false;
+                
+                // Add bounce animation to question
+                this.elements.questionDisplay.classList.remove('bounce-in');
+                setTimeout(() => {
+                    this.elements.questionDisplay.classList.add('bounce-in');
+                }, 10);
+            }
+
+            generateChoices(correctAnswer) {
+                const choices = [correctAnswer];
+                
+                // Generate wrong answers
+                while (choices.length < 4) {
+                    let wrongAnswer;
+                    
+                    if (Math.random() < 0.6) {
+                        // Add/subtract random amount
+                        const offset = Math.floor(Math.random() * 12) + 1;
+                        wrongAnswer = correctAnswer + (Math.random() < 0.5 ? -offset : offset);
+                    } else {
+                        // Use different multiplication result
+                        const randomMultiplier = Math.floor(Math.random() * 10) + 1;
+                        wrongAnswer = 4 * randomMultiplier;
+                    }
+                    
+                    if (wrongAnswer > 0 && wrongAnswer <= 100 && !choices.includes(wrongAnswer)) {
+                        choices.push(wrongAnswer);
+                    }
+                }
+                
+                return this.shuffleArray(choices);
+            }
+
+            handleAnswer(selectedIndex) {
+                if (this.gameState.isAnswered) return;
+                
+                this.gameState.isAnswered = true;
+                const choiceButtons = this.elements.choicesContainer.querySelectorAll('.choice-btn');
+                const selectedButton = choiceButtons[selectedIndex];
+                const isCorrect = selectedButton.dataset.correct === 'true';
+                
+                // Disable all buttons
+                choiceButtons.forEach(btn => btn.classList.add('disabled-choice'));
+                
+                if (isCorrect) {
+                    this.gameState.score++;
+                    selectedButton.classList.add('correct-answer');
+                    this.elements.feedbackMessage.innerHTML = '<span class="text-green-600">🎉 Benar! Hebat sekali!</span>';
+                } else {
+                    selectedButton.classList.add('wrong-answer');
+                    // Highlight correct answer
+                    choiceButtons.forEach(btn => {
+                        if (btn.dataset.correct === 'true') {
+                            btn.classList.add('correct-answer');
+                        }
+                    });
+                    this.elements.feedbackMessage.innerHTML = '<span class="text-red-500">❌ Salah! Coba lagi ya!</span>';
+                }
+                
+                // Auto advance after 2 seconds
+                setTimeout(() => {
+                    this.nextQuestion();
+                }, 2000);
+            }
+
+            nextQuestion() {
+                this.gameState.currentQuestion++;
+                
+                if (this.gameState.currentQuestion >= this.gameState.totalQuestions) {
+                    this.showResults();
+                } else {
+                    this.displayQuestion();
+                }
+            }
+
+            showResults() {
+                const percentage = Math.round((this.gameState.score / this.gameState.totalQuestions) * 100);
+                
+                // Update result display
+                this.elements.finalScore.textContent = `${this.gameState.score}/10`;
+                this.elements.percentage.textContent = `${percentage}%`;
+                
+                // Set result message based on performance
+                if (percentage === 100) {
+                    this.elements.resultEmoji.textContent = '🏆';
+                    this.elements.resultTitle.textContent = 'Sempurna!';
+                    this.elements.resultMessage.textContent = 'Luar biasa! Anda menguasai perkalian 4 dengan sempurna!';
+                } else if (percentage >= 80) {
+                    this.elements.resultEmoji.textContent = '🎉';
+                    this.elements.resultTitle.textContent = 'Hebat!';
+                    this.elements.resultMessage.textContent = 'Kerja yang bagus! Anda hampir sempurna!';
+                } else if (percentage >= 60) {
+                    this.elements.resultEmoji.textContent = '👍';
+                    this.elements.resultTitle.textContent = 'Bagus!';
+                    this.elements.resultMessage.textContent = 'Tidak buruk! Terus berlatih untuk hasil yang lebih baik!';
+                } else {
+                    this.elements.resultEmoji.textContent = '💪';
+                    this.elements.resultTitle.textContent = 'Terus Berlatih!';
+                    this.elements.resultMessage.textContent = 'Jangan menyerah! Latihan akan membuat Anda lebih baik!';
+                }
+                
+                this.showResultsScreen();
+            }
+
+            showModeSelection() {
+                this.elements.modeSelection.classList.remove('hidden');
+                this.elements.gameScreen.classList.add('hidden');
+                this.elements.resultsScreen.classList.add('hidden');
+            }
+
+            showGameScreen() {
+                this.elements.modeSelection.classList.add('hidden');
+                this.elements.gameScreen.classList.remove('hidden');
+                this.elements.resultsScreen.classList.add('hidden');
+            }
+
+            showResultsScreen() {
+                this.elements.modeSelection.classList.add('hidden');
+                this.elements.gameScreen.classList.add('hidden');
+                this.elements.resultsScreen.classList.remove('hidden');
+            }
+
+            restartGame() {
+                this.startGame(this.gameState.mode);
+            }
+        }
+
+        // Initialize game when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            new MultiplicationGame();
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97b7c4cb60ddfd96',t:'MTc1NzI2NDQ5My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
